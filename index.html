@@ -7,10 +7,6 @@
 
 <style>
 
-/* ===============================
-   ROOT COLOR (GOV STYLE)
-================================ */
-
 :root{
 --primary:#1e3a8a;
 --primary2:#2563eb;
@@ -20,8 +16,6 @@
 --text:#111827;
 --muted:#6b7280;
 }
-
-/* RESET */
 
 *{
 box-sizing:border-box;
@@ -58,20 +52,13 @@ justify-content:center;
 /* CARD */
 
 .card{
-
 width:100%;
 max-width:800px;
-
 background:var(--card);
-
 border-radius:18px;
-
 padding:18px;
-
 box-shadow:0 10px 30px rgba(0,0,0,.08);
-
 border:1px solid var(--border);
-
 }
 
 /* TITLE */
@@ -86,13 +73,9 @@ text-align:center;
 /* GRID */
 
 .grid{
-
 display:grid;
-
 grid-template-columns:1fr;
-
 gap:14px;
-
 }
 
 /* FIELD */
@@ -103,37 +86,23 @@ flex-direction:column;
 }
 
 label{
-
 font-size:12px;
-
 color:var(--muted);
-
 margin-bottom:5px;
-
 }
 
 input{
-
 padding:12px 14px;
-
 border-radius:10px;
-
 border:1px solid var(--border);
-
 font-size:14px;
-
 background:#fff;
-
 }
 
 input:focus{
-
 border-color:var(--primary2);
-
 outline:none;
-
 box-shadow:0 0 0 3px rgba(37,99,235,.15);
-
 }
 
 /* FILE */
@@ -145,41 +114,25 @@ grid-column:1/-1;
 /* BUTTON */
 
 button{
-
 margin-top:10px;
-
 padding:14px;
-
 border:none;
-
 border-radius:12px;
-
 background:linear-gradient(135deg,var(--primary),var(--primary2));
-
 color:#fff;
-
 font-size:15px;
-
 font-weight:700;
-
 cursor:pointer;
-
 width:100%;
-
 }
 
 /* MESSAGE */
 
 .msg{
-
 margin-top:10px;
-
 font-size:13px;
-
 text-align:center;
-
 color:var(--muted);
-
 }
 
 /* DESKTOP */
@@ -187,27 +140,18 @@ color:var(--muted);
 @media(min-width:768px){
 
 .grid{
-
 grid-template-columns:1fr 1fr;
-
 }
 
 .file{
-
 grid-column:1/-1;
-
 }
 
 button{
-
 width:260px;
-
 margin:auto;
-
 display:block;
-
 margin-top:18px;
-
 }
 
 }
@@ -285,7 +229,7 @@ Pengajuan Pangkat
 <script>
 
 /* ===============================
-   URL API GOOGLE SCRIPT
+   API URL
 ================================ */
 
 const API_URL="https://script.google.com/macros/s/AKfycbzqERUeQF2hokgp-ssN3V4PJCldAKv09iq71PNMoi5z92vnspI7YeWd-G--55keg7bFpw/exec"
@@ -295,7 +239,34 @@ const $=id=>document.getElementById(id)
 let timer=null
 
 
-/* AUTOCOMPLETE */
+/* ===============================
+   AUTO ISI DARI DASHBOARD
+================================ */
+
+function loadProfile(){
+
+const profile = JSON.parse(localStorage.getItem("rsds_profile"))
+
+if(!profile) return
+
+$('nama').value =
+profile.NAMA || profile.nama || ""
+
+$('nip').value =
+profile.NIP || profile.nip || ""
+
+$('gol').value =
+profile.GOL || profile.GOLONGAN || profile.gol || ""
+
+$('jab').value =
+profile.JAB || profile.JABATAN || profile.jab || ""
+
+}
+
+
+/* ===============================
+   AUTOCOMPLETE NAMA
+================================ */
 
 $('nama').addEventListener('input',e=>{
 
@@ -318,9 +289,7 @@ $('dlNama').innerHTML=''
 list.forEach(n=>{
 
 const o=document.createElement('option')
-
 o.value=n
-
 $('dlNama').appendChild(o)
 
 })
@@ -332,7 +301,9 @@ $('dlNama').appendChild(o)
 })
 
 
-/* AUTO FILL */
+/* ===============================
+   AUTO FILL DATA
+================================ */
 
 $('nama').addEventListener('change',()=>{
 
@@ -357,9 +328,17 @@ $('jab').value=d.jab
 })
 
 
-/* AMBIL PERIODE */
+/* ===============================
+   LOAD HALAMAN
+================================ */
 
 window.onload=()=>{
+
+/* LOAD PROFILE DARI DASHBOARD */
+
+loadProfile()
+
+/* AMBIL PERIODE */
 
 fetch(API_URL,{
 method:"POST",
@@ -369,15 +348,15 @@ action:"periode"
 })
 .then(r=>r.json())
 .then(p=>{
-
 $('periode').value=p
-
 })
 
 }
 
 
-/* SUBMIT */
+/* ===============================
+   SUBMIT DATA
+================================ */
 
 $('submit').onclick=async()=>{
 
@@ -395,9 +374,7 @@ return
 const dataUrl=await new Promise(res=>{
 
 const fr=new FileReader()
-
 fr.onload=()=>res(fr.result)
-
 fr.readAsDataURL(f)
 
 })
@@ -430,18 +407,14 @@ files
 .then(res=>{
 
 if(res.error){
-
 $('msg').innerText=res.error
 return
-
 }
 
 $('msg').innerText="Pengajuan berhasil"
 
 setTimeout(()=>{
-
 location.reload()
-
 },1500)
 
 })
